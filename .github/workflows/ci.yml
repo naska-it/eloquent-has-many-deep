@@ -5,18 +5,18 @@ on: [push, pull_request]
 jobs:
   tests:
     runs-on: ubuntu-latest
-      
+
     strategy:
       matrix:
-        php: [7.4, 7.3, 7.2]
-        database: [mysql, sqlite]
+        php: [8.0, 7.4, 7.3, 7.2]
+        database: [mysql]
         release: [stable, lowest]
-        include: 
+        include:
           - php: 7.4
             database: mysql
-            release: stable 
+            release: stable
             coverage: xdebug
-    
+
     services:
       mysql:
         image: mysql:5.7
@@ -27,12 +27,12 @@ jobs:
           - 3306
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/cache@v1
         with:
           path: ~/.composer/cache/files
           key: php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
-      - uses: shivammathur/setup-php@v1
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: bcmath, ctype, json, mbstring, openssl, pdo, pdo_${{ matrix.database }}, tokenizer, xml
